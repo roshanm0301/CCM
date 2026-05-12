@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m json.tool)",
+      "Bash(curl -s -b /tmp/ccm_cookies.txt http://localhost:3000/api/v1/auth/me)",
+      "Bash(curl -s -c /tmp/ccm2.txt -X POST http://localhost:3000/api/v1/auth/login -H 'Content-Type: application/json' -d '{\"username\":\"agent1\",\"password\":\"Agent@123\"}')",
+      "Bash(curl -s -b /tmp/ccm2.txt http://localhost:3000/api/v1/auth/me)",
+      "Bash(npx tsc:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker restart:*)",
+      "Bash(docker compose:*)",
+      "Bash(xargs grep:*)",
+      "Skill(test-gap)",
+      "Skill(test-gap:*)",
+      "Skill(gate-review)",
+      "Skill(gate-review:*)",
+      "Bash(curl -s http://localhost:3000/api/v1/health)",
+      "Bash(curl -s http://localhost:3000/api/v1/health/live)",
+      "Bash(curl -s http://localhost:3000/api/v1/health/ready)",
+      "Bash(curl -sv http://localhost:8080)",
+      "Bash(git -C D:/excellongit/apt-iDMS-app-CCM diff --name-only HEAD)",
+      "Bash(git -C D:/excellongit/apt-iDMS-app-CCM status --short)",
+      "Bash(git -C \"D:/excellongit/apt-iDMS-app-CCM/apt-idms-ccm\" status --short)",
+      "Skill(env-check)",
+      "Skill(env-check:*)"
+    ]
+  }
+}
