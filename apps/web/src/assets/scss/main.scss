@@ -1,0 +1,130 @@
+@font-face {
+  font-family: 'NotoSans-Black';
+  src: url(../fonts/NotoSans-Black.ttf);
+}
+
+@font-face {
+  font-family: 'NotoSans-Bold';
+  src: url(../fonts/NotoSans-Bold.ttf);
+}
+
+@font-face {
+  font-family: 'NotoSans-ExtraBold';
+  src: url(../fonts/NotoSans-ExtraBold.ttf);
+}
+
+@font-face {
+  font-family: 'NotoSans-ExtraLight';
+  src: url(../fonts/NotoSans-ExtraLight.ttf);
+}
+
+@font-face {
+  font-family: 'NotoSans-Light';
+  src: url(../fonts/NotoSans-Light.ttf);
+}
+
+@font-face {
+  font-family: 'NotoSans-Medium';
+  src: url(../fonts/NotoSans-Medium.ttf);
+}
+
+@font-face {
+  font-family: 'NotoSans-Regular';
+  src: url(../fonts/NotoSans-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'NotoSans-SemiBold';
+  src: url(../fonts/NotoSans-SemiBold.ttf);
+}
+
+@font-face {
+  font-family: 'NotoSans-Thin';
+  src: url(../fonts/NotoSans-Thin.ttf);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+a {
+  text-decoration: none;
+}
+
+:not(pre)>code {
+  font-family: Inconsolata, Monaco, Consolas, 'Courier New', Courier, monospace;
+  background-color: #eeeeee;
+  padding: 2px 4px;
+  direction: ltr;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+/* Turn on custom 8px wide scrollbar */
+::-webkit-scrollbar {
+  // width                : 6px;
+  /* 1px wider than Lion. */
+  /* This is more usable for users trying to click it. */
+  background-color: rgba(0, 0, 0, 0);
+  -webkit-border-radius: 100px;
+
+}
+
+/* hover effect for both scrollbar area, and scrollbar 'thumb' */
+::-webkit-scrollbar:hover {
+  background-color: rgba(0, 0, 0, 0.0);
+}
+
+/* The scrollbar 'thumb' ...that marque oval shape in a scrollbar */
+::-webkit-scrollbar-thumb:vertical {
+  /* This is the EXACT color of Mac OS scrollbars.
+       Yes, I pulled out digital color meter */
+  background: rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 100px;
+}
+
+#drawerId::-webkit-scrollbar-thumb:vertical {
+  /* This is the EXACT color of Mac OS scrollbars.
+       Yes, I pulled out digital color meter */
+  background: rgba(0, 0, 0, 0.0);
+  -webkit-border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb:vertical:active {
+  background: rgba(0, 0, 0, 0.61);
+  /* Some darker color when you click it */
+  -webkit-border-radius: 100px;
+}
+
+/* set button(top and bottom of the scrollbar) */
+body::-webkit-scrollbar-button {
+  display: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.rbc-event-label {
+  display: none !important;
+}
+
+.showElispsisOnCard {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 165px;
+}

@@ -1,0 +1,63 @@
+# =============================================================================
+# CCM — Docker Compose devtools overlay
+#
+# Adds pgAdmin and mongo-express under the "devtools" Compose profile.
+# These services MUST NOT be used in production or CI environments.
+#
+# Usage (always combine with the main compose file):
+#   docker compose -f docker-compose.yml -f docker-compose.devtools.yml \
+#     --profile devtools up -d
+#
+# Or use the npm shortcut:
+#   npm run docker:devtools
+# =============================================================================
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # pgAdmin 4 — PostgreSQL web UI
+  # Accessible at http://localhost:5050
+  # Login: PGADMIN_DEFAULT_EMAIL / PGADMIN_DEFAULT_PASSWORD from .env
+  # ---------------------------------------------------------------------------
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: ccm-pgadmin
+    profiles: ["devtools"]
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@local.dev}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:?PGADMIN_DEFAULT_PASSWORD must be set in .env}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+  # ---------------------------------------------------------------------------
+  # mongo-express — MongoDB web UI
+  # Accessible at http://localhost:8081
+  # ---------------------------------------------------------------------------
+  mongo-express:
+    image: mongo-express:1
+    container_name: ccm-mongo-express
+    profiles: ["devtools"]
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USER:-ccm_user}:${MONGO_PASSWORD:?MONGO_PASSWORD must be set in .env}@mongo:27017/?authSource=admin
+      ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME:-admin}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD:?ME_CONFIG_BASICAUTH_PASSWORD must be set in .env}
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+    ports:
+      - "8081:8081"
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+
+volumes:
+  pgadmin_data:
+    driver: local

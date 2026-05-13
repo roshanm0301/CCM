@@ -1,0 +1,55 @@
+{
+  "name": "ccm",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Customer Contact Management (CCM) monorepo",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "install:all": "npm install",
+    "postinstall": "node scripts/create-placeholder-icons.mjs",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "lint:fix": "npm run lint:fix --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\" --ignore-path .gitignore",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\" --ignore-path .gitignore",
+
+    "----DOCKER FULL STACK (use port 8080)----": "",
+    "docker:start": "node scripts/free-dev-ports.mjs && docker compose up -d",
+    "docker:start:build": "node scripts/free-dev-ports.mjs && docker compose up --build -d",
+    "docker:rebuild:api": "node scripts/free-dev-ports.mjs 3000 && docker compose build api && docker compose up -d api",
+    "docker:restart:api": "docker compose restart api",
+    "docker:stop": "docker compose stop",
+    "docker:down": "docker compose down",
+    "docker:down:volumes": "docker compose down -v",
+    "docker:status": "docker compose ps",
+    "docker:logs": "docker compose logs -f",
+    "docker:logs:api": "docker compose logs -f api",
+    "docker:devtools": "docker compose -f docker-compose.yml -f docker-compose.devtools.yml --profile devtools up -d",
+
+    "----HYBRID DEV (DB in Docker, API+Web local)----": "",
+    "docker:db": "docker compose up -d postgres mongo",
+    "dev:local:api": "npm run build --workspace=@ccm/types && npm run dev:local --workspace=@ccm/api",
+    "dev:local:web": "npm run dev --workspace=@ccm/web",
+
+    "----DOCUMENTATION----": "",
+    "docs:seeds": "node scripts/generate-seed-docs.mjs",
+    "docs:seeds:watch": "node scripts/generate-seed-docs.mjs --watch",
+
+    "----LEGACY (kept for CI compatibility)----": "",
+    "docker:up": "node scripts/free-dev-ports.mjs && docker compose up --build",
+    "docker:up:detached": "node scripts/free-dev-ports.mjs && docker compose up --build -d",
+    "docker:up:fast": "node scripts/free-dev-ports.mjs && docker compose up -d --no-build"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  }
+}

@@ -1,0 +1,39 @@
+# =============================================================================
+# Root .dockerignore — applies to all Docker builds using the monorepo root
+# as the build context.
+# =============================================================================
+
+# Dependencies — will be reinstalled inside the container
+**/node_modules
+
+# Build output — rebuilt inside the container
+**/dist
+**/.vite
+
+# Test and coverage
+**/coverage
+**/.nyc_output
+
+# Secrets — never bake into images
+.env
+.env.*
+!.env.example
+
+# Logs
+**/*.log
+
+# Editor and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Documentation — not needed in runtime images
+*.md
+design-system/
+input-requirements/
+docs/
+
+# Git history
+.git/
+.gitignore

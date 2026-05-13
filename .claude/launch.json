@@ -1,0 +1,75 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "1. CCM Databases Only (Docker)",
+      "description": "Start only PostgreSQL + MongoDB in Docker. Use this as the first step of the hybrid local dev workflow. Databases are then accessible at localhost:5432 and localhost:27017.",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": [
+        "compose",
+        "-f",
+        "D:/excellongit/apt-iDMS-app-CCM/apt-idms-ccm/docker-compose.yml",
+        "up",
+        "-d",
+        "postgres",
+        "mongo"
+      ],
+      "port": 5432,
+      "cwd": "."
+    },
+    {
+      "name": "2. CCM API (local dev — nodemon + tsx)",
+      "description": "Run the API directly on the host with hot-reload via nodemon. Loads .env + .env.local so POSTGRES_HOST and MONGO_HOST resolve to localhost. Requires databases to be running (config 1 or full Docker stack).",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev:local", "--workspace=@ccm/api"],
+      "port": 3000,
+      "cwd": "."
+    },
+    {
+      "name": "3. CCM Web (local dev — Vite HMR)",
+      "description": "Run the Vite dev server directly on the host. Changes to src/ reflect in the browser in under 1 second via HMR. /api/* requests are proxied to localhost:3000. Requires the API to be running (config 2 or full Docker stack).",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--workspace=@ccm/web"],
+      "port": 5173,
+      "cwd": "."
+    },
+    {
+      "name": "4. CCM Full Stack — fast start (Docker, no rebuild)",
+      "description": "Start all 4 containers using already-built images. Use when you have confirmed changes locally and want to run the full stack without rebuilding. App is served at http://localhost:8080.",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": [
+        "compose",
+        "-f",
+        "D:/excellongit/apt-iDMS-app-CCM/apt-idms-ccm/docker-compose.yml",
+        "up",
+        "-d",
+        "--no-build"
+      ],
+      "port": 8080,
+      "cwd": "."
+    },
+    {
+      "name": "5. CCM Full Stack — with build (Docker)",
+      "description": "Build all images and start all 4 containers. Use after Dockerfile changes, new npm dependencies, or for a clean first-run. App is served at http://localhost:8080. This is the slowest option — only use when a rebuild is actually needed.",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": [
+        "compose",
+        "-f",
+        "D:/excellongit/apt-iDMS-app-CCM/apt-idms-ccm/docker-compose.yml",
+        "up",
+        "--build",
+        "-d"
+      ],
+      "port": 8080,
+      "cwd": "."
+    },
+    {
+      "name": "6. CCM Web Preview (Vite production build)",
+      "description": "Build the Vite app in production mode and serve it locally on port 4173. Use to verify the production bundle before Docker build. Requires a prior 'npm run build' in apps/web.",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "preview", "--workspace=@ccm/web"],
+      "port": 4173,
+      "cwd": "."
+    }
+  ]
+}

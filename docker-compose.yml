@@ -1,0 +1,209 @@
+# =============================================================================
+# CCM — Docker Compose (local dev + CI stack)
+#
+# Web frontend runs Vite dev server with volume-mapped source files.
+# Any change to apps/web/src, public, or index.html is reflected
+# instantly via HMR — no rebuild or restart required.
+#
+# Usage:
+#   docker compose up --build -d       # first run — builds images
+#   docker compose up -d               # subsequent runs — uses cached images
+#   docker compose down                # stop containers
+#   docker compose down -v             # stop + delete data volumes
+# =============================================================================
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL 16
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: ccm-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ccm}
+      POSTGRES_USER: ${POSTGRES_USER:-ccm_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./ops/migrations:/docker-entrypoint-initdb.d:ro
+      # Seeds run automatically on fresh volume (docker compose down -v resets).
+      # NOTE: WSL2/Windows mount of ops/seeds/dev can fail on initdb read-only overlay;
+      #       seeds are already present in the persisted postgres_data volume.
+      # - ./ops/seeds/dev:/docker-entrypoint-initdb.d/seeds
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ccm_user} -d ${POSTGRES_DB:-ccm}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ---------------------------------------------------------------------------
+  # MongoDB 7
+  # ---------------------------------------------------------------------------
+  mongo:
+    image: mongo:7
+    container_name: ccm-mongo
+    restart: unless-stopped
+    # --replSet enables transactions (required by cascade inactivation logic).
+    # --bind_ip_all ensures the replica set member is reachable from other containers.
+    # --keyFile is required by MongoDB 7+ when auth + replica-set are both active.
+    entrypoint: ["/bin/bash", "/usr/local/bin/mongo-entrypoint-wrapper.sh"]
+    command: ["--replSet", "rs0", "--bind_ip_all", "--keyFile", "/etc/mongo-keyfile"]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-ccm_user}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:?MONGO_PASSWORD must be set in .env}
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-ccm}
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./ops/mongo/mongo-keyfile:/tmp/mongo-keyfile-src:ro
+      - ./ops/mongo/mongo-entrypoint.sh:/usr/local/bin/mongo-entrypoint-wrapper.sh:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ---------------------------------------------------------------------------
+  # MongoDB Replica Set Initialiser (one-shot)
+  #
+  # Runs rs.initiate() once after the mongo container is healthy.
+  # Idempotent — safe to re-run on container restart.
+  # The api service depends on this completing before it starts.
+  # ---------------------------------------------------------------------------
+  mongo-rs-init:
+    image: mongo:7
+    container_name: ccm-mongo-rs-init
+    restart: "no"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      MONGO_USER: ${MONGO_USER:-ccm_user}
+      MONGO_PASSWORD: ${MONGO_PASSWORD:?MONGO_PASSWORD must be set in .env}
+    volumes:
+      - ./ops/mongo/rs-init.sh:/rs-init.sh:ro
+    entrypoint: ["/bin/bash", "/rs-init.sh"]
+
+  # ---------------------------------------------------------------------------
+  # CCM Backend API
+  # ---------------------------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: production
+    container_name: ccm-api
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3000
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-ccm}
+      POSTGRES_USER: ${POSTGRES_USER:-ccm_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}
+      POSTGRES_POOL_MIN: ${POSTGRES_POOL_MIN:-2}
+      POSTGRES_POOL_MAX: ${POSTGRES_POOL_MAX:-10}
+      MONGO_HOST: mongo
+      MONGO_PORT: 27017
+      MONGO_DB: ${MONGO_DB:-ccm}
+      MONGO_USER: ${MONGO_USER:-ccm_user}
+      MONGO_PASSWORD: ${MONGO_PASSWORD:?MONGO_PASSWORD must be set in .env}
+      MONGO_REPLICA_SET: rs0
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set in .env}
+      JWT_EXPIRY: ${JWT_EXPIRY:-8h}
+      JWT_REFRESH_EXPIRY: ${JWT_REFRESH_EXPIRY:-24h}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:8080}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      TELECMI_APP_ID: ${TELECMI_APP_ID:-1111112}
+      TELECMI_APP_SECRET: ${TELECMI_APP_SECRET:-}
+      TELECMI_SBC_URI: ${TELECMI_SBC_URI:-sbcind.telecmi.com}
+      TELECMI_WEBHOOK_CUSTOM_VALUE: ${TELECMI_WEBHOOK_CUSTOM_VALUE:-}
+      TELECMI_BASE_URL: ${TELECMI_BASE_URL:-https://rest.telecmi.com}
+      TELECMI_CALLER_ID: ${TELECMI_CALLER_ID:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+      mongo-rs-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- --timeout=5 http://localhost:3000/health/live || exit 1"]
+      interval: 15s
+      timeout: 8s
+      retries: 5
+      start_period: 45s
+
+  # ---------------------------------------------------------------------------
+  # CCM Web Frontend — Vite dev server with HMR
+  #
+  # Volume mounts (host → container):
+  #   apps/web/src      → live source — changes hot-reload instantly
+  #   apps/web/public   → static assets — picked up on next page load
+  #
+  # node_modules uses an anonymous volume so the container-installed
+  # packages are never overwritten by the host mount.
+  # ---------------------------------------------------------------------------
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      target: development
+    container_name: ccm-web
+    restart: unless-stopped
+    ports:
+      - "8080:5173"
+    environment:
+      # API_PROXY_TARGET: server-side only (no VITE_ prefix) — tells the Vite
+      # proxy where to forward /api/* requests inside the Docker network.
+      # VITE_API_BASE_URL is intentionally left empty so Axios uses relative
+      # URLs (same-origin) and the Vite proxy handles the forwarding.
+      API_PROXY_TARGET: http://api:3000
+      VITE_HTTPS: ${VITE_HTTPS:-false}
+      # Node 22 happy-eyeballs tries IPv6 first; force IPv4 for internal Docker DNS
+      NODE_OPTIONS: --dns-result-order=ipv4first
+    volumes:
+      # Source and assets — live edits reflected via HMR
+      - ./apps/web/src:/workspace/apps/web/src
+      - ./apps/web/public:/workspace/apps/web/public
+      # Design-system tokens and theme (used by App.tsx and component imports)
+      - ./design-system:/workspace/design-system:ro
+      # Preserve container node_modules — never overwritten by host
+      - web_node_modules:/workspace/node_modules
+      - web_app_node_modules:/workspace/apps/web/node_modules
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      # Use explicit 127.0.0.1 — "localhost" resolves to ::1 (IPv6) inside
+      # the container but Vite only binds to 0.0.0.0 (IPv4).
+      # nc -z does a TCP connect-only check — no HTTP, no SSE hang.
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 5173"]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 90s
+
+# =============================================================================
+# Named volumes
+# =============================================================================
+volumes:
+  postgres_data:
+    driver: local
+  mongo_data:
+    driver: local
+  web_node_modules:
+    driver: local
+  web_app_node_modules:
+    driver: local

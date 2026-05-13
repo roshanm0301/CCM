@@ -1,0 +1,88 @@
+# =============================================================================
+# CCM — .gitignore
+# =============================================================================
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+build/
+out/
+.next/
+
+# TypeScript compiled output
+*.js.map
+*.d.ts.map
+
+# Environment files — NEVER commit secrets
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Vite / Rollup cache
+.vite/
+vite.config.ts.timestamp-*
+
+# PWA
+**/public/sw.js
+**/public/workbox-*.js
+**/public/sw.js.map
+**/public/workbox-*.js.map
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Editor directories and files
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Claude Code local settings — machine-specific, auto-generated, never commit
+.claude/settings.local.json
+
+# Docker local overrides (keep docker-compose.yml, ignore local overrides)
+docker-compose.override.yml
+docker-compose.local.yml
+
+# pgAdmin data directory (if mounted locally)
+pgadmin_data/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Package manager lock files for non-npm (keep package-lock.json)
+yarn.lock
+pnpm-lock.yaml

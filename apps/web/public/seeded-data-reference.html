@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seeded &amp; Mock Data Reference â€” CCM</title>
+  <style>
+    /* â”€â”€ Reset â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      font-size: 14px;
+      line-height: 1.65;
+      color: #1a1a2e;
+      background: #f0f2f5;
+    }
+    a { color: #1565c0; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code {
+      font-family: 'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace;
+      font-size: 0.875em;
+      background: #e8eaf6;
+      color: #283593;
+      border-radius: 3px;
+      padding: 1px 5px;
+    }
+
+    /* â”€â”€ App Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: #1b1d21;
+      color: #fff;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    }
+    .logo-mark {
+      width: 28px; height: 28px;
+      background: #eb6a2c;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800; color: #fff;
+      flex-shrink: 0; user-select: none;
+    }
+    .header-app-name {
+      font-size: 0.9rem; font-weight: 700; color: #fff; white-space: nowrap;
+    }
+    .header-sep { color: rgba(255,255,255,0.3); font-size: 1.1rem; user-select: none; }
+    .header-doc-name {
+      font-size: 0.82rem; color: rgba(255,255,255,0.6); white-space: nowrap;
+    }
+    .header-spacer { flex: 1; }
+    .search-global {
+      height: 32px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 20px;
+      background: rgba(255,255,255,0.07);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='rgba(255,255,255,0.45)'%3E%3Cpath d='M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 9px center;
+      color: #fff;
+      font-size: 0.82rem;
+      padding: 0 12px 0 32px;
+      outline: none;
+      width: 220px;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+    .search-global::placeholder { color: rgba(255,255,255,0.35); }
+    .search-global:focus { border-color: #eb6a2c; background-color: rgba(255,255,255,0.11); }
+    .meta-pill {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.55);
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 4px;
+      padding: 3px 9px;
+      white-space: nowrap;
+    }
+    .meta-pill strong { color: rgba(255,255,255,0.8); font-weight: 600; }
+    .print-btn {
+      height: 30px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 4px;
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.7);
+      font-size: 0.77rem;
+      padding: 0 10px;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 5px;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+    .print-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
+
+    /* â”€â”€ Layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 56px);
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* â”€â”€ Sidebar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    .sidebar {
+      width: 256px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+      background: #fff;
+      border-right: 1px solid #e2e5ea;
+      padding: 14px 0 24px;
+      scrollbar-width: thin;
+      scrollbar-color: #ddd transparent;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: #ddd; border-radius: 2px; }
+    .sidebar-label {
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #aaa;
+      padding: 0 16px 6px;
+    }
+    .toc-link {
+      display: block;
+      padding: 5px 14px;
+      font-size: 0.81rem;
+      color: #555;
+      border-left: 2px solid transparent;
+      line-height: 1.4;
+      transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+    .toc-link:hover { background: #f5f7ff; color: #1565c0; text-decoration: none; }
+    .toc-link.active {
+      color: #1565c0;
+      border-left-color: #1565c0;
+      background: #e8f0fe;
+      font-weight: 600;
+    }
+    .toc-l3 {
+      padding-left: 26px;
+      font-size: 0.77rem;
+      color: #777;
+    }
+    .toc-l3.active { color: #1565c0; }
+    .toc-l4 {
+      padding-left: 38px;
+      font-size: 0.73rem;
+      color: #999;
+    }
+    .toc-l4.active { color: #1565c0; }
+
+    /* â”€â”€ Main Content â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    .content {
+      flex: 1;
+      min-width: 0;
+      padding: 28px 40px 48px;
+    }
+
+    /* â”€â”€ Section Title (h2) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #1b1d21;
+      margin: 36px 0 4px;
+      padding: 14px 0 10px;
+      border-bottom: 2px solid #e2e5ea;
+      scroll-margin-top: 68px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h2:first-child { margin-top: 0; }
+    .section-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px; height: 26px;
+      background: #1b1d21;
+      color: #fff;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* â”€â”€ Subsection Title (h3, h4) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #37474f;
+      margin: 20px 0 6px;
+      scroll-margin-top: 68px;
+    }
+    h4 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #546e7a;
+      margin: 14px 0 4px;
+      scroll-margin-top: 68px;
+    }
+
+    /* â”€â”€ Body text â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    p { margin-bottom: 10px; color: #455a64; }
+    strong { color: #263238; }
+    em { color: #546e7a; }
+    hr { border: none; border-top: 1px solid #e8ecef; margin: 22px 0; }
+
+    /* â”€â”€ Lists â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    ul.doc-list, ol.doc-list {
+      margin: 8px 0 14px 22px;
+      color: #455a64;
+    }
+    ul.doc-list li, ol.doc-list li { margin-bottom: 5px; }
+
+    /* â”€â”€ Info Box (blockquote) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    blockquote.info-box {
+      background: #e8f0fe;
+      border-left: 4px solid #1565c0;
+      border-radius: 0 6px 6px 0;
+      padding: 10px 16px;
+      margin: 10px 0 14px;
+      font-size: 0.84rem;
+    }
+    blockquote.info-box p {
+      margin-bottom: 4px;
+      color: #1a237e;
+    }
+    blockquote.info-box p:last-child { margin-bottom: 0; }
+    blockquote.info-box strong { color: #0d47a1; }
+    blockquote.info-box code { background: #c5cae9; color: #1a237e; }
+
+    /* â”€â”€ Code Block â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    pre.code-block {
+      position: relative;
+      background: #1e2a35;
+      color: #cdd9e5;
+      border-radius: 8px;
+      padding: 18px 20px;
+      overflow-x: auto;
+      margin: 12px 0 16px;
+      font-size: 0.81rem;
+      line-height: 1.55;
+    }
+    pre.code-block::before {
+      content: attr(data-lang);
+      position: absolute;
+      top: 7px; right: 12px;
+      font-size: 0.65rem;
+      font-family: inherit;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    pre.code-block code {
+      font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+      font-size: inherit;
+      background: none;
+      color: inherit;
+      padding: 0;
+      border-radius: 0;
+    }
+
+    /* â”€â”€ Table Wrapper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    .table-wrap { margin: 10px 0 20px; }
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 7px;
+    }
+    .table-filter {
+      height: 30px;
+      border: 1px solid #cdd3da;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      padding: 0 10px 0 28px;
+      outline: none;
+      width: 232px;
+      color: #37474f;
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='%23aaa'%3E%3Cpath d='M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") no-repeat 8px center;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .table-filter:focus { border-color: #1565c0; box-shadow: 0 0 0 2px #bbdefb; }
+    .row-count {
+      font-size: 0.74rem;
+      color: #aaa;
+      white-space: nowrap;
+    }
+    .table-scroll {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid #e2e5ea;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    /* â”€â”€ Data Table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      font-size: 0.83rem;
+    }
+    table.data-table thead tr {
+      background: #1b1d21;
+      color: #fff;
+    }
+    table.data-table th {
+      padding: 9px 14px;
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+    table.data-table td {
+      padding: 8px 14px;
+      color: #455a64;
+      border-bottom: 1px solid #f0f2f5;
+      vertical-align: middle;
+    }
+    table.data-table tbody tr:hover { background: #f5f8ff; }
+    table.data-table tbody tr:last-child td { border-bottom: none; }
+    table.data-table tr.row-hidden { display: none; }
+    table.data-table td em { color: #b0bec5; font-style: italic; font-size: 0.9em; }
+
+    /* â”€â”€ Copy Button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    .copy-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .copy-btn {
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: #b0bec5;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 0.85em;
+      line-height: 1;
+      transition: background 0.12s, color 0.12s;
+    }
+    .copy-btn:hover { background: #e3f2fd; color: #1565c0; }
+    .copy-btn.copied { background: #e8f5e9; color: #2e7d32; }
+
+    /* â”€â”€ No-results message â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    .no-results {
+      text-align: center;
+      padding: 18px 20px;
+      color: #aaa;
+      font-size: 0.83rem;
+      font-style: italic;
+    }
+
+    /* â”€â”€ Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    .doc-footer {
+      margin-top: 40px;
+      padding: 20px 0 0;
+      border-top: 1px solid #e2e5ea;
+      font-size: 0.74rem;
+      color: #aaa;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .doc-footer strong { color: #78909c; }
+    .doc-footer code { font-size: 0.85em; background: #f0f2f5; color: #546e7a; }
+
+    /* â”€â”€ Responsive â€” tablet â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .content { padding: 20px; }
+      .search-global { width: 160px; }
+      .meta-pill { display: none; }
+    }
+
+    /* â”€â”€ Responsive â€” mobile â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    @media (max-width: 600px) {
+      .header-doc-name, .header-sep, .search-global, .print-btn { display: none; }
+      .content { padding: 14px; }
+      table.data-table thead { display: none; }
+      table.data-table tbody tr {
+        display: block;
+        border-bottom: 1px solid #e2e5ea;
+        padding: 8px 0;
+      }
+      table.data-table td {
+        display: block;
+        padding: 4px 14px;
+        border: none;
+      }
+      table.data-table td::before {
+        content: attr(data-label) ": ";
+        font-weight: 700;
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        color: #90a4ae;
+        letter-spacing: 0.04em;
+      }
+    }
+
+    /* â”€â”€ Print â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    @media print {
+      .app-header, .sidebar, .table-toolbar, .copy-btn, .print-btn { display: none !important; }
+      .layout { display: block; }
+      .content { padding: 0; }
+      body { background: #fff; font-size: 11pt; }
+      pre.code-block { background: #f5f5f5 !important; color: #333 !important; print-color-adjust: exact; }
+      table.data-table thead tr { background: #333 !important; print-color-adjust: exact; }
+      h2 { break-before: page; padding-top: 0; }
+      h2:first-child { break-before: auto; }
+      .table-scroll { border: 1px solid #ccc; overflow: visible; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       APP HEADER
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <header class="app-header" role="banner">
+    <div class="logo-mark" aria-hidden="true">C</div>
+    <span class="header-app-name">CCM</span>
+    <span class="header-sep" aria-hidden="true">/</span>
+    <span class="header-doc-name">Seeded &amp; Mock Data Reference</span>
+    <div class="header-spacer"></div>
+    <input
+      id="globalSearch"
+      type="search"
+      class="search-global"
+      placeholder="Search all dataâ€¦"
+      aria-label="Search all tables"
+      autocomplete="off"
+    />
+    <div class="meta-pill">
+      Generated <strong>29 Mar 2026, 15:14</strong>
+    </div>
+    <div class="meta-pill" title="Watched: docs/seeded-data-reference.md, ops/migrations/011_seed_reference_values.sql, ops/seeds/dev/seed_test_users_dev_only.sql, ops/seeds/dev/seed_activity_flow_users_dev_only.sql, apps/api/src/modules/integration/MockInstallBaseAdapter.ts, apps/api/src/modules/integration/MockCustomerMasterAdapter.ts, apps/api/src/modules/integration/MockContextAdapter.ts">
+      <strong>7</strong> files watched
+    </div>
+    <button class="print-btn" onclick="window.print()" aria-label="Print this page">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/>
+      </svg>
+      Print
+    </button>
+  </header>
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       MAIN LAYOUT
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <div class="layout">
+
+    <!-- Sidebar / Table of Contents -->
+    <nav class="sidebar" aria-label="Table of contents">
+      <div class="sidebar-label">Contents</div>
+      <a href="#1-login-credentials" class="toc-link toc-l2">1. Login Credentials</a>
+      <a href="#11-phase-1-core-users" class="toc-link toc-l3">1.1 Phase 1 Core Users</a>
+      <a href="#12-phase-5-activity-flow-users" class="toc-link toc-l3">1.2 Phase 5 â€” Activity Flow Users</a>
+      <a href="#ccm-staff" class="toc-link toc-l4">CCM Staff</a>
+      <a href="#dealer-dlr-001-users" class="toc-link toc-l4">Dealer DLR-001 Users</a>
+      <a href="#dealer-dlr-002-users" class="toc-link toc-l4">Dealer DLR-002 Users</a>
+      <a href="#2-reference-lookup-values" class="toc-link toc-l2">2. Reference / Lookup Values</a>
+      <a href="#21-search-filter-types" class="toc-link toc-l3">2.1 Search Filter Types</a>
+      <a href="#22-contact-reasons" class="toc-link toc-l3">2.2 Contact Reasons</a>
+      <a href="#23-identification-outcomes" class="toc-link toc-l3">2.3 Identification Outcomes</a>
+      <a href="#24-interaction-dispositions" class="toc-link toc-l3">2.4 Interaction Dispositions</a>
+      <a href="#25-agent-statuses" class="toc-link toc-l3">2.5 Agent Statuses</a>
+      <a href="#3-mock-customers-install-base" class="toc-link toc-l2">3. Mock Customers â€” Install Base</a>
+      <a href="#31-customer-vehicle-records" class="toc-link toc-l3">3.1 Customer &amp; Vehicle Records</a>
+      <a href="#32-quick-search-reference" class="toc-link toc-l3">3.2 Quick Search Reference</a>
+      <a href="#4-mock-customers-customer-master-fallback" class="toc-link toc-l2">4. Mock Customers â€” Customer Master (Fallback)</a>
+      <a href="#5-mock-dealers" class="toc-link toc-l2">5. Mock Dealers</a>
+      <a href="#6-test-database-helpers" class="toc-link toc-l2">6. Test Database Helpers</a>
+      <a href="#61-seed-functions" class="toc-link toc-l3">6.1 Seed Functions</a>
+      <a href="#62-cleanup-functions" class="toc-link toc-l3">6.2 Cleanup Functions</a>
+      <a href="#63-assertion-helpers" class="toc-link toc-l3">6.3 Assertion Helpers</a>
+      <a href="#64-auth-helper-testappts" class="toc-link toc-l3">6.4 Auth Helper (`testApp.ts`)</a>
+      <a href="#7-seeding-flow" class="toc-link toc-l2">7. Seeding Flow</a>
+      <a href="#local-development-docker-compose" class="toc-link toc-l3">Local Development (Docker Compose)</a>
+      <a href="#integration-tests" class="toc-link toc-l3">Integration Tests</a>
+      <a href="#production" class="toc-link toc-l3">Production</a>
+      <a href="#8-file-index" class="toc-link toc-l2">8. File Index</a>
+    </nav>
+
+    <!-- Main content -->
+    <main class="content" id="main-content" tabindex="-1">
+      <blockquote class="info-box"><p><strong>Purpose:</strong> This file is the single reference for all data that is seeded, migrated, or mocked in the CCM application. Use it to verify test scenarios, debug search results, and check login credentials without digging through source files.</p><p><strong>Maintenance rule:</strong> Whenever master data or transaction data is added to any seed/migration/mock file, this document <strong>must</strong> be updated in the same commit.</p></blockquote>
+<hr />
+
+<h2 id="1-login-credentials">1. Login Credentials</h2>
+<h3 id="11-phase-1-core-users">1.1 Phase 1 Core Users</h3>
+<blockquote class="info-box"><p><strong>Source:</strong> <code>ops/seeds/dev/seed_test_users_dev_only.sql</code></p><p><strong>Environment:</strong> Development &amp; CI only â€” never staging or production.</p></blockquote>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-6j4zhw5"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-6j4zhw5">2 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-6j4zhw5" class="data-table">
+        <thead><tr><th>Username</th><th>Password</th><th>Role</th><th>User ID</th><th>Display Name</th><th>Initial Status</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`agent1`</code><button class="copy-btn" data-copy="`agent1`" title="Copy" aria-label="Copy `agent1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Agent@123`</code><button class="copy-btn" data-copy="`Agent@123`" title="Copy" aria-label="Copy `Agent@123`">âŽ˜</button></span></td><td data-label="Role"><code>agent</code></td><td data-label="User ID"><span class="copy-cell"><code>`a1000000-0000-0000-0000-000000000001`</code><button class="copy-btn" data-copy="`a1000000-0000-0000-0000-000000000001`" title="Copy" aria-label="Copy `a1000000-0000-0000-0000-000000000001`">âŽ˜</button></span></td><td data-label="Display Name">Test Agent One</td><td data-label="Initial Status"><code>offline</code></td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`noaccess`</code><button class="copy-btn" data-copy="`noaccess`" title="Copy" aria-label="Copy `noaccess`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`NoAccess@123`</code><button class="copy-btn" data-copy="`NoAccess@123`" title="Copy" aria-label="Copy `NoAccess@123`">âŽ˜</button></span></td><td data-label="Role"><em>(none)</em></td><td data-label="User ID"><span class="copy-cell"><code>`a2000000-0000-0000-0000-000000000002`</code><button class="copy-btn" data-copy="`a2000000-0000-0000-0000-000000000002`" title="Copy" aria-label="Copy `a2000000-0000-0000-0000-000000000002`">âŽ˜</button></span></td><td data-label="Display Name">Test No Access User</td><td data-label="Initial Status"><code>offline</code></td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<p><strong>Notes:</strong></p>
+<ul class="doc-list"><li><code>agent1</code> is the primary test account used for all Phase 1 workflow verification.</li><li><code>noaccess</code> has no role assigned â€” use it to verify RBAC rejection (403) on protected endpoints.</li><li>Passwords are stored as bcrypt (cost 10) hashes; the plaintext values above are for test use only.</li><li>The seed file is mounted via Docker Compose. Uncomment the seed volume in <code>docker-compose.yml</code> to activate it on first container init.</li></ul>
+<h3 id="12-phase-5-activity-flow-users">1.2 Phase 5 â€” Activity Flow Users</h3>
+<blockquote class="info-box"><p><strong>Source:</strong> <code>ops/seeds/dev/seed_activity_flow_users_dev_only.sql</code></p><p><strong>Environment:</strong> Development only. Apply migration <code>020_create_activity_flow_roles.sql</code> first.</p></blockquote>
+<h4 id="ccm-staff">CCM Staff</h4>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-5p44a0w"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-5p44a0w">2 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-5p44a0w" class="data-table">
+        <thead><tr><th>Username</th><th>Password</th><th>Role(s)</th><th>User ID</th><th>Display Name</th><th>Dealer</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`ccm_agent1`</code><button class="copy-btn" data-copy="`ccm_agent1`" title="Copy" aria-label="Copy `ccm_agent1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role(s)"><code>ccm_agent</code>, <code>agent</code></td><td data-label="User ID"><span class="copy-cell"><code>`b1000000-0000-0000-0000-000000000001`</code><button class="copy-btn" data-copy="`b1000000-0000-0000-0000-000000000001`" title="Copy" aria-label="Copy `b1000000-0000-0000-0000-000000000001`">âŽ˜</button></span></td><td data-label="Display Name">CCM Agent One</td><td data-label="Dealer">â€”</td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`ccm_lead1`</code><button class="copy-btn" data-copy="`ccm_lead1`" title="Copy" aria-label="Copy `ccm_lead1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role(s)"><code>ccm_team_lead</code></td><td data-label="User ID"><span class="copy-cell"><code>`b1000000-0000-0000-0000-000000000002`</code><button class="copy-btn" data-copy="`b1000000-0000-0000-0000-000000000002`" title="Copy" aria-label="Copy `b1000000-0000-0000-0000-000000000002`">âŽ˜</button></span></td><td data-label="Display Name">CCM Team Lead One</td><td data-label="Dealer">â€”</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<blockquote class="info-box"><p><code>ccm_agent1</code> carries both <code>ccm_agent</code> and <code>agent</code> (legacy) roles â€” it is the primary account for Activity Flow feature testing.</p></blockquote>
+<h4 id="dealer-dlr-001-users">Dealer DLR-001 Users</h4>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-j3vgsai"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-j3vgsai">8 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-j3vgsai" class="data-table">
+        <thead><tr><th>Username</th><th>Password</th><th>Role</th><th>User ID</th><th>Display Name</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr1_sa1`</code><button class="copy-btn" data-copy="`dlr1_sa1`" title="Copy" aria-label="Copy `dlr1_sa1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_service_advisor</code></td><td data-label="User ID"><span class="copy-cell"><code>`c1000000-0000-0000-0000-000000000001`</code><button class="copy-btn" data-copy="`c1000000-0000-0000-0000-000000000001`" title="Copy" aria-label="Copy `c1000000-0000-0000-0000-000000000001`">âŽ˜</button></span></td><td data-label="Display Name">DLR1 Service Advisor</td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr1_wc1`</code><button class="copy-btn" data-copy="`dlr1_wc1`" title="Copy" aria-label="Copy `dlr1_wc1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_workshop_controller</code></td><td data-label="User ID"><span class="copy-cell"><code>`c1000000-0000-0000-0000-000000000002`</code><button class="copy-btn" data-copy="`c1000000-0000-0000-0000-000000000002`" title="Copy" aria-label="Copy `c1000000-0000-0000-0000-000000000002`">âŽ˜</button></span></td><td data-label="Display Name">DLR1 Workshop Controller</td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr1_pe1`</code><button class="copy-btn" data-copy="`dlr1_pe1`" title="Copy" aria-label="Copy `dlr1_pe1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_parts_executive</code></td><td data-label="User ID"><span class="copy-cell"><code>`c1000000-0000-0000-0000-000000000003`</code><button class="copy-btn" data-copy="`c1000000-0000-0000-0000-000000000003`" title="Copy" aria-label="Copy `c1000000-0000-0000-0000-000000000003`">âŽ˜</button></span></td><td data-label="Display Name">DLR1 Parts Executive</td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr1_ce1`</code><button class="copy-btn" data-copy="`dlr1_ce1`" title="Copy" aria-label="Copy `dlr1_ce1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_crm_executive</code></td><td data-label="User ID"><span class="copy-cell"><code>`c1000000-0000-0000-0000-000000000004`</code><button class="copy-btn" data-copy="`c1000000-0000-0000-0000-000000000004`" title="Copy" aria-label="Copy `c1000000-0000-0000-0000-000000000004`">âŽ˜</button></span></td><td data-label="Display Name">DLR1 CRM Executive</td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr1_we1`</code><button class="copy-btn" data-copy="`dlr1_we1`" title="Copy" aria-label="Copy `dlr1_we1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_warranty_executive</code></td><td data-label="User ID"><span class="copy-cell"><code>`c1000000-0000-0000-0000-000000000005`</code><button class="copy-btn" data-copy="`c1000000-0000-0000-0000-000000000005`" title="Copy" aria-label="Copy `c1000000-0000-0000-0000-000000000005`">âŽ˜</button></span></td><td data-label="Display Name">DLR1 Warranty Executive</td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr1_sm1`</code><button class="copy-btn" data-copy="`dlr1_sm1`" title="Copy" aria-label="Copy `dlr1_sm1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_service_manager</code></td><td data-label="User ID"><span class="copy-cell"><code>`c1000000-0000-0000-0000-000000000006`</code><button class="copy-btn" data-copy="`c1000000-0000-0000-0000-000000000006`" title="Copy" aria-label="Copy `c1000000-0000-0000-0000-000000000006`">âŽ˜</button></span></td><td data-label="Display Name">DLR1 Service Manager</td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr1_ba1`</code><button class="copy-btn" data-copy="`dlr1_ba1`" title="Copy" aria-label="Copy `dlr1_ba1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_bodyshop_advisor</code></td><td data-label="User ID"><span class="copy-cell"><code>`c1000000-0000-0000-0000-000000000007`</code><button class="copy-btn" data-copy="`c1000000-0000-0000-0000-000000000007`" title="Copy" aria-label="Copy `c1000000-0000-0000-0000-000000000007`">âŽ˜</button></span></td><td data-label="Display Name">DLR1 Bodyshop Advisor</td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr1_et1`</code><button class="copy-btn" data-copy="`dlr1_et1`" title="Copy" aria-label="Copy `dlr1_et1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_ev_technician</code></td><td data-label="User ID"><span class="copy-cell"><code>`c1000000-0000-0000-0000-000000000008`</code><button class="copy-btn" data-copy="`c1000000-0000-0000-0000-000000000008`" title="Copy" aria-label="Copy `c1000000-0000-0000-0000-000000000008`">âŽ˜</button></span></td><td data-label="Display Name">DLR1 EV Technician</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<h4 id="dealer-dlr-002-users">Dealer DLR-002 Users</h4>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-x6q6f4m"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-x6q6f4m">8 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-x6q6f4m" class="data-table">
+        <thead><tr><th>Username</th><th>Password</th><th>Role</th><th>User ID</th><th>Display Name</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr2_sa1`</code><button class="copy-btn" data-copy="`dlr2_sa1`" title="Copy" aria-label="Copy `dlr2_sa1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_service_advisor</code></td><td data-label="User ID"><span class="copy-cell"><code>`c2000000-0000-0000-0000-000000000001`</code><button class="copy-btn" data-copy="`c2000000-0000-0000-0000-000000000001`" title="Copy" aria-label="Copy `c2000000-0000-0000-0000-000000000001`">âŽ˜</button></span></td><td data-label="Display Name">DLR2 Service Advisor</td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr2_wc1`</code><button class="copy-btn" data-copy="`dlr2_wc1`" title="Copy" aria-label="Copy `dlr2_wc1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_workshop_controller</code></td><td data-label="User ID"><span class="copy-cell"><code>`c2000000-0000-0000-0000-000000000002`</code><button class="copy-btn" data-copy="`c2000000-0000-0000-0000-000000000002`" title="Copy" aria-label="Copy `c2000000-0000-0000-0000-000000000002`">âŽ˜</button></span></td><td data-label="Display Name">DLR2 Workshop Controller</td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr2_pe1`</code><button class="copy-btn" data-copy="`dlr2_pe1`" title="Copy" aria-label="Copy `dlr2_pe1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_parts_executive</code></td><td data-label="User ID"><span class="copy-cell"><code>`c2000000-0000-0000-0000-000000000003`</code><button class="copy-btn" data-copy="`c2000000-0000-0000-0000-000000000003`" title="Copy" aria-label="Copy `c2000000-0000-0000-0000-000000000003`">âŽ˜</button></span></td><td data-label="Display Name">DLR2 Parts Executive</td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr2_ce1`</code><button class="copy-btn" data-copy="`dlr2_ce1`" title="Copy" aria-label="Copy `dlr2_ce1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_crm_executive</code></td><td data-label="User ID"><span class="copy-cell"><code>`c2000000-0000-0000-0000-000000000004`</code><button class="copy-btn" data-copy="`c2000000-0000-0000-0000-000000000004`" title="Copy" aria-label="Copy `c2000000-0000-0000-0000-000000000004`">âŽ˜</button></span></td><td data-label="Display Name">DLR2 CRM Executive</td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr2_we1`</code><button class="copy-btn" data-copy="`dlr2_we1`" title="Copy" aria-label="Copy `dlr2_we1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_warranty_executive</code></td><td data-label="User ID"><span class="copy-cell"><code>`c2000000-0000-0000-0000-000000000005`</code><button class="copy-btn" data-copy="`c2000000-0000-0000-0000-000000000005`" title="Copy" aria-label="Copy `c2000000-0000-0000-0000-000000000005`">âŽ˜</button></span></td><td data-label="Display Name">DLR2 Warranty Executive</td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr2_sm1`</code><button class="copy-btn" data-copy="`dlr2_sm1`" title="Copy" aria-label="Copy `dlr2_sm1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_service_manager</code></td><td data-label="User ID"><span class="copy-cell"><code>`c2000000-0000-0000-0000-000000000006`</code><button class="copy-btn" data-copy="`c2000000-0000-0000-0000-000000000006`" title="Copy" aria-label="Copy `c2000000-0000-0000-0000-000000000006`">âŽ˜</button></span></td><td data-label="Display Name">DLR2 Service Manager</td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr2_ba1`</code><button class="copy-btn" data-copy="`dlr2_ba1`" title="Copy" aria-label="Copy `dlr2_ba1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_bodyshop_advisor</code></td><td data-label="User ID"><span class="copy-cell"><code>`c2000000-0000-0000-0000-000000000007`</code><button class="copy-btn" data-copy="`c2000000-0000-0000-0000-000000000007`" title="Copy" aria-label="Copy `c2000000-0000-0000-0000-000000000007`">âŽ˜</button></span></td><td data-label="Display Name">DLR2 Bodyshop Advisor</td></tr>
+          <tr><td data-label="Username"><span class="copy-cell"><code>`dlr2_et1`</code><button class="copy-btn" data-copy="`dlr2_et1`" title="Copy" aria-label="Copy `dlr2_et1`">âŽ˜</button></span></td><td data-label="Password"><span class="copy-cell"><code>`Test@123`</code><button class="copy-btn" data-copy="`Test@123`" title="Copy" aria-label="Copy `Test@123`">âŽ˜</button></span></td><td data-label="Role"><code>dealer_ev_technician</code></td><td data-label="User ID"><span class="copy-cell"><code>`c2000000-0000-0000-0000-000000000008`</code><button class="copy-btn" data-copy="`c2000000-0000-0000-0000-000000000008`" title="Copy" aria-label="Copy `c2000000-0000-0000-0000-000000000008`">âŽ˜</button></span></td><td data-label="Display Name">DLR2 EV Technician</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<p><strong>Notes for Phase 5 users:</strong></p>
+<ul class="doc-list"><li>All Phase 5 passwords are <code>Test@123</code>.</li><li>Dealer users carry <code>external_user_ref</code> = <code>DLR-001</code> or <code>DLR-002</code>.</li><li>Only <code>ccm_agent1</code> (role <code>ccm_agent</code>) has access to the Activity Master and Activity Template APIs; all other Phase 5 users will receive a 403 until their roles are granted access.</li><li>Phase 5 roles are seeded by migration <code>020_create_activity_flow_roles.sql</code>.</li></ul>
+<hr />
+
+<h2 id="2-reference-lookup-values">2. Reference / Lookup Values</h2>
+<blockquote class="info-box"><p><strong>Source:</strong> <code>ops/migrations/011_seed_reference_values.sql</code></p><p><strong>Environment:</strong> All environments (runs as part of the migration sequence).</p></blockquote>
+<p>These values populate the <code>reference_values</code> table and drive all UI dropdowns.</p>
+<h3 id="21-search-filter-types">2.1 Search Filter Types</h3>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-5py7p3k"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-5py7p3k">4 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-5py7p3k" class="data-table">
+        <thead><tr><th>Code</th><th>Label</th><th>Sort Order</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Code"><code>mobile</code></td><td data-label="Label">Mobile Number</td><td data-label="Sort Order">1</td></tr>
+          <tr><td data-label="Code"><code>registration_number</code></td><td data-label="Label">Registration Number</td><td data-label="Sort Order">2</td></tr>
+          <tr><td data-label="Code"><code>customer_name</code></td><td data-label="Label">Customer Name</td><td data-label="Sort Order">3</td></tr>
+          <tr><td data-label="Code"><code>email</code></td><td data-label="Label">Email Address</td><td data-label="Sort Order">4</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<h3 id="22-contact-reasons">2.2 Contact Reasons</h3>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-5dnzgsh"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-5dnzgsh">5 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-5dnzgsh" class="data-table">
+        <thead><tr><th>Code</th><th>Label</th><th>Sort Order</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Code"><code>complaint</code></td><td data-label="Label">Complaint</td><td data-label="Sort Order">1</td></tr>
+          <tr><td data-label="Code"><code>query</code></td><td data-label="Label">Query</td><td data-label="Sort Order">2</td></tr>
+          <tr><td data-label="Code"><code>suggestion</code></td><td data-label="Label">Suggestion</td><td data-label="Sort Order">3</td></tr>
+          <tr><td data-label="Code"><code>feedback</code></td><td data-label="Label">Feedback</td><td data-label="Sort Order">4</td></tr>
+          <tr><td data-label="Code"><code>other</code></td><td data-label="Label">Other</td><td data-label="Sort Order">5</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<h3 id="23-identification-outcomes">2.3 Identification Outcomes</h3>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-nxaep6k"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-nxaep6k">5 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-nxaep6k" class="data-table">
+        <thead><tr><th>Code</th><th>Label</th><th>Sort Order</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Code"><code>customer_vehicle_identified</code></td><td data-label="Label">Customer and Vehicle Identified</td><td data-label="Sort Order">1</td></tr>
+          <tr><td data-label="Code"><code>customer_identified_vehicle_unresolved</code></td><td data-label="Label">Customer Identified â€” Vehicle Unresolved</td><td data-label="Sort Order">2</td></tr>
+          <tr><td data-label="Code"><code>vehicle_identified_customer_partially_resolved</code></td><td data-label="Label">Vehicle Identified â€” Customer Partially Resolved</td><td data-label="Sort Order">3</td></tr>
+          <tr><td data-label="Code"><code>no_verified_match</code></td><td data-label="Label">No Verified Match</td><td data-label="Sort Order">4</td></tr>
+          <tr><td data-label="Code"><code>multiple_matches_resolved_by_agent</code></td><td data-label="Label">Multiple Matches â€” Resolved by Agent</td><td data-label="Sort Order">5</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<h3 id="24-interaction-dispositions">2.4 Interaction Dispositions</h3>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-7ity86p"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-7ity86p">10 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-7ity86p" class="data-table">
+        <thead><tr><th>Code</th><th>Label</th><th>Remarks Required?</th><th>Sort Order</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Code"><code>information_provided</code></td><td data-label="Label">Information Provided</td><td data-label="Remarks Required?">No</td><td data-label="Sort Order">1</td></tr>
+          <tr><td data-label="Code"><code>information_captured</code></td><td data-label="Label">Information Captured</td><td data-label="Remarks Required?">No</td><td data-label="Sort Order">2</td></tr>
+          <tr><td data-label="Code"><code>no_match_found</code></td><td data-label="Label">No Match Found</td><td data-label="Remarks Required?"><strong>Yes</strong></td><td data-label="Sort Order">3</td></tr>
+          <tr><td data-label="Code"><code>wrong_number</code></td><td data-label="Label">Wrong Number</td><td data-label="Remarks Required?">No</td><td data-label="Sort Order">4</td></tr>
+          <tr><td data-label="Code"><code>silent_call</code></td><td data-label="Label">Silent Call</td><td data-label="Remarks Required?">No</td><td data-label="Sort Order">5</td></tr>
+          <tr><td data-label="Code"><code>abusive_caller</code></td><td data-label="Label">Abusive Caller</td><td data-label="Remarks Required?"><strong>Yes</strong></td><td data-label="Sort Order">6</td></tr>
+          <tr><td data-label="Code"><code>technical_issue</code></td><td data-label="Label">Technical Issue</td><td data-label="Remarks Required?"><strong>Yes</strong></td><td data-label="Sort Order">7</td></tr>
+          <tr><td data-label="Code"><code>transferred_outside_ccm</code></td><td data-label="Label">Transferred Outside CCM</td><td data-label="Remarks Required?">No</td><td data-label="Sort Order">8</td></tr>
+          <tr><td data-label="Code"><code>incomplete_interaction</code></td><td data-label="Label">Incomplete Interaction</td><td data-label="Remarks Required?"><strong>Yes</strong></td><td data-label="Sort Order">9</td></tr>
+          <tr><td data-label="Code"><code>others</code></td><td data-label="Label">Others</td><td data-label="Remarks Required?"><strong>Yes</strong></td><td data-label="Sort Order">10</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<blockquote class="info-box"><p><strong>Remarks-required rule:</strong> When a disposition marked &quot;Yes&quot; is selected in the wrap-up form, the Remarks field becomes mandatory. The form blocks save until remarks are entered.</p></blockquote>
+<h3 id="25-agent-statuses">2.5 Agent Statuses</h3>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-ddabuzv"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-ddabuzv">4 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-ddabuzv" class="data-table">
+        <thead><tr><th>Code</th><th>Label</th><th>Sort Order</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Code"><code>ready_for_calls</code></td><td data-label="Label">Ready for Calls</td><td data-label="Sort Order">1</td></tr>
+          <tr><td data-label="Code"><code>break</code></td><td data-label="Label">Break</td><td data-label="Sort Order">2</td></tr>
+          <tr><td data-label="Code"><code>offline</code></td><td data-label="Label">Offline</td><td data-label="Sort Order">3</td></tr>
+          <tr><td data-label="Code"><code>training</code></td><td data-label="Label">Training</td><td data-label="Sort Order">4</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<hr />
+
+<h2 id="3-mock-customers-install-base">3. Mock Customers â€” Install Base</h2>
+<blockquote class="info-box"><p><strong>Source:</strong> <code>apps/api/src/modules/integration/MockInstallBaseAdapter.ts</code></p><p><strong>Environment:</strong> All non-production environments (in-memory; no database entry).</p></blockquote>
+<p>Used by the Search API when real Install Base integration is not available. Supports search by: <strong>Mobile</strong>, <strong>Registration Number</strong>, <strong>Customer Name</strong>, <strong>Email</strong> (all partial/case-insensitive).</p>
+<h3 id="31-customer-vehicle-records">3.1 Customer &amp; Vehicle Records</h3>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-i7jn7ok"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-i7jn7ok">11 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-i7jn7ok" class="data-table">
+        <thead><tr><th>#</th><th>Customer Ref</th><th>Name</th><th>Mobile</th><th>Email</th><th>Vehicle Ref</th><th>Registration</th><th>Model</th><th>Variant</th><th>Chassis</th><th>Dealer Ref</th></tr></thead>
+        <tbody>
+          <tr><td data-label="#">1</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-IB-001`</code><button class="copy-btn" data-copy="`CUST-IB-001`" title="Copy" aria-label="Copy `CUST-IB-001`">âŽ˜</button></span></td><td data-label="Name">Rahul Sharma</td><td data-label="Mobile"><code>9876543210</code></td><td data-label="Email">rahul.sharma@email.com</td><td data-label="Vehicle Ref"><span class="copy-cell"><code>`VEH-IB-001`</code><button class="copy-btn" data-copy="`VEH-IB-001`" title="Copy" aria-label="Copy `VEH-IB-001`">âŽ˜</button></span></td><td data-label="Registration"><code>MH12AB1234</code></td><td data-label="Model">Bajaj Pulsar NS200</td><td data-label="Variant">NS200 FI</td><td data-label="Chassis"><code>MD2A11EZ9MCA00001</code></td><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-001`</code><button class="copy-btn" data-copy="`DLR-001`" title="Copy" aria-label="Copy `DLR-001`">âŽ˜</button></span></td></tr>
+          <tr><td data-label="#">2</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-IB-002`</code><button class="copy-btn" data-copy="`CUST-IB-002`" title="Copy" aria-label="Copy `CUST-IB-002`">âŽ˜</button></span></td><td data-label="Name">Priya Patel</td><td data-label="Mobile"><code>8765432109</code></td><td data-label="Email">priya.patel@gmail.com</td><td data-label="Vehicle Ref"><span class="copy-cell"><code>`VEH-IB-002`</code><button class="copy-btn" data-copy="`VEH-IB-002`" title="Copy" aria-label="Copy `VEH-IB-002`">âŽ˜</button></span></td><td data-label="Registration"><code>GJ01CD5678</code></td><td data-label="Model">Bajaj Dominar 400</td><td data-label="Variant">Dominar 400 TS</td><td data-label="Chassis"><code>MD2A55BZ1NCA00002</code></td><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-002`</code><button class="copy-btn" data-copy="`DLR-002`" title="Copy" aria-label="Copy `DLR-002`">âŽ˜</button></span></td></tr>
+          <tr><td data-label="#">3</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-IB-003`</code><button class="copy-btn" data-copy="`CUST-IB-003`" title="Copy" aria-label="Copy `CUST-IB-003`">âŽ˜</button></span></td><td data-label="Name">Amit Kumar</td><td data-label="Mobile"><code>7654321098</code></td><td data-label="Email"><em>(none)</em></td><td data-label="Vehicle Ref"><span class="copy-cell"><code>`VEH-IB-003`</code><button class="copy-btn" data-copy="`VEH-IB-003`" title="Copy" aria-label="Copy `VEH-IB-003`">âŽ˜</button></span></td><td data-label="Registration"><code>DL4CAF9876</code></td><td data-label="Model">Bajaj Avenger Street 160</td><td data-label="Variant">Street 160</td><td data-label="Chassis"><code>MD2A16AZ8LCA00003</code></td><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-003`</code><button class="copy-btn" data-copy="`DLR-003`" title="Copy" aria-label="Copy `DLR-003`">âŽ˜</button></span></td></tr>
+          <tr><td data-label="#">3</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-IB-003`</code><button class="copy-btn" data-copy="`CUST-IB-003`" title="Copy" aria-label="Copy `CUST-IB-003`">âŽ˜</button></span></td><td data-label="Name">Amit Kumar</td><td data-label="Mobile"><code>7654321098</code></td><td data-label="Email"><em>(none)</em></td><td data-label="Vehicle Ref"><span class="copy-cell"><code>`VEH-IB-004`</code><button class="copy-btn" data-copy="`VEH-IB-004`" title="Copy" aria-label="Copy `VEH-IB-004`">âŽ˜</button></span></td><td data-label="Registration"><code>DL5CAG1122</code></td><td data-label="Model">Bajaj Platina 110</td><td data-label="Variant">Platina 110 H-Gear</td><td data-label="Chassis"><code>MD2A11BZ3MCA00004</code></td><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-003`</code><button class="copy-btn" data-copy="`DLR-003`" title="Copy" aria-label="Copy `DLR-003`">âŽ˜</button></span></td></tr>
+          <tr><td data-label="#">4</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-IB-004`</code><button class="copy-btn" data-copy="`CUST-IB-004`" title="Copy" aria-label="Copy `CUST-IB-004`">âŽ˜</button></span></td><td data-label="Name">Sunita Reddy</td><td data-label="Mobile"><code>6543210987</code></td><td data-label="Email">sunita.reddy@yahoo.com</td><td data-label="Vehicle Ref"><span class="copy-cell"><code>`VEH-IB-005`</code><button class="copy-btn" data-copy="`VEH-IB-005`" title="Copy" aria-label="Copy `VEH-IB-005`">âŽ˜</button></span></td><td data-label="Registration"><code>AP28TG3344</code></td><td data-label="Model">Bajaj CT100</td><td data-label="Variant">CT100 B</td><td data-label="Chassis"><code>MD2A10BZ9LCA00005</code></td><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-004`</code><button class="copy-btn" data-copy="`DLR-004`" title="Copy" aria-label="Copy `DLR-004`">âŽ˜</button></span></td></tr>
+          <tr><td data-label="#">5</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-IB-005`</code><button class="copy-btn" data-copy="`CUST-IB-005`" title="Copy" aria-label="Copy `CUST-IB-005`">âŽ˜</button></span></td><td data-label="Name">Vikram Singh</td><td data-label="Mobile"><code>9988776655</code></td><td data-label="Email">vikram.singh@outlook.com</td><td data-label="Vehicle Ref"><span class="copy-cell"><code>`VEH-IB-006`</code><button class="copy-btn" data-copy="`VEH-IB-006`" title="Copy" aria-label="Copy `VEH-IB-006`">âŽ˜</button></span></td><td data-label="Registration"><code>RJ14UC7890</code></td><td data-label="Model">Bajaj Pulsar 150</td><td data-label="Variant">Pulsar 150 Twin Disc</td><td data-label="Chassis"><code>MD2A15EZ2NCA00006</code></td><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-005`</code><button class="copy-btn" data-copy="`DLR-005`" title="Copy" aria-label="Copy `DLR-005`">âŽ˜</button></span></td></tr>
+          <tr><td data-label="#">6</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-IB-006`</code><button class="copy-btn" data-copy="`CUST-IB-006`" title="Copy" aria-label="Copy `CUST-IB-006`">âŽ˜</button></span></td><td data-label="Name">Ekta Sire</td><td data-label="Mobile"><code>8087570780</code></td><td data-label="Email">ektas@excellonsoft.com</td><td data-label="Vehicle Ref"><span class="copy-cell"><code>`VEH-IB-007`</code><button class="copy-btn" data-copy="`VEH-IB-007`" title="Copy" aria-label="Copy `VEH-IB-007`">âŽ˜</button></span></td><td data-label="Registration"><code>KA53MN4455</code></td><td data-label="Model">Bajaj Pulsar RS200</td><td data-label="Variant">RS200 FI ABS</td><td data-label="Chassis"><code>MD2A20EZ7MCA00007</code></td><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-002`</code><button class="copy-btn" data-copy="`DLR-002`" title="Copy" aria-label="Copy `DLR-002`">âŽ˜</button></span></td></tr>
+          <tr><td data-label="#">7</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-IB-007`</code><button class="copy-btn" data-copy="`CUST-IB-007`" title="Copy" aria-label="Copy `CUST-IB-007`">âŽ˜</button></span></td><td data-label="Name">Roshan</td><td data-label="Mobile"><code>8554982643</code></td><td data-label="Email">roshanm@excellonsoft.com</td><td data-label="Vehicle Ref"><span class="copy-cell"><code>`VEH-IB-008`</code><button class="copy-btn" data-copy="`VEH-IB-008`" title="Copy" aria-label="Copy `VEH-IB-008`">âŽ˜</button></span></td><td data-label="Registration"><code>KL07AS6677</code></td><td data-label="Model">Bajaj Dominar 250</td><td data-label="Variant">Dominar 250 ABS</td><td data-label="Chassis"><code>MD2A25BZ4NCA00008</code></td><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-006`</code><button class="copy-btn" data-copy="`DLR-006`" title="Copy" aria-label="Copy `DLR-006`">âŽ˜</button></span></td></tr>
+          <tr><td data-label="#">8</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-IB-008`</code><button class="copy-btn" data-copy="`CUST-IB-008`" title="Copy" aria-label="Copy `CUST-IB-008`">âŽ˜</button></span></td><td data-label="Name">Kavitha Balachandran</td><td data-label="Mobile"><code>9123456780</code></td><td data-label="Email">kavitha.b@techmail.com</td><td data-label="Vehicle Ref"><span class="copy-cell"><code>`VEH-IB-009`</code><button class="copy-btn" data-copy="`VEH-IB-009`" title="Copy" aria-label="Copy `VEH-IB-009`">âŽ˜</button></span></td><td data-label="Registration"><code>TN22BG8899</code></td><td data-label="Model">Bajaj Avenger Cruise 220</td><td data-label="Variant">Cruise 220</td><td data-label="Chassis"><code>MD2A22AZ5MCA00009</code></td><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-007`</code><button class="copy-btn" data-copy="`DLR-007`" title="Copy" aria-label="Copy `DLR-007`">âŽ˜</button></span></td></tr>
+          <tr><td data-label="#">9</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-IB-009`</code><button class="copy-btn" data-copy="`CUST-IB-009`" title="Copy" aria-label="Copy `CUST-IB-009`">âŽ˜</button></span></td><td data-label="Name">Suresh Yadav</td><td data-label="Mobile"><code>8012345678</code></td><td data-label="Email"><em>(none)</em></td><td data-label="Vehicle Ref"><span class="copy-cell"><code>`VEH-IB-010`</code><button class="copy-btn" data-copy="`VEH-IB-010`" title="Copy" aria-label="Copy `VEH-IB-010`">âŽ˜</button></span></td><td data-label="Registration"><code>UP32GH0011</code></td><td data-label="Model">Bajaj CT125X</td><td data-label="Variant">CT125X Drum</td><td data-label="Chassis"><code>MD2A12BZ6NCA00010</code></td><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-008`</code><button class="copy-btn" data-copy="`DLR-008`" title="Copy" aria-label="Copy `DLR-008`">âŽ˜</button></span></td></tr>
+          <tr><td data-label="#">10</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-IB-010`</code><button class="copy-btn" data-copy="`CUST-IB-010`" title="Copy" aria-label="Copy `CUST-IB-010`">âŽ˜</button></span></td><td data-label="Name">Mahabaleshwar</td><td data-label="Mobile"><code>8618546060</code></td><td data-label="Email">anjali.mehta@business.in</td><td data-label="Vehicle Ref"><span class="copy-cell"><code>`VEH-IB-011`</code><button class="copy-btn" data-copy="`VEH-IB-011`" title="Copy" aria-label="Copy `VEH-IB-011`">âŽ˜</button></span></td><td data-label="Registration"><code>MH43JK2233</code></td><td data-label="Model">Bajaj Pulsar N160</td><td data-label="Variant">N160 Single Disc</td><td data-label="Chassis"><code>MD2A16GZ3NCA00011</code></td><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-001`</code><button class="copy-btn" data-copy="`DLR-001`" title="Copy" aria-label="Copy `DLR-001`">âŽ˜</button></span></td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<blockquote class="info-box"><p><strong>Multi-vehicle customer:</strong> Amit Kumar (<code>CUST-IB-003</code>) owns 2 vehicles (<code>VEH-IB-003</code> and <code>VEH-IB-004</code>). Use this customer to test multi-vehicle disambiguation.</p></blockquote>
+<h3 id="32-quick-search-reference">3.2 Quick Search Reference</h3>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-gcswswu"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-gcswswu">8 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-gcswswu" class="data-table">
+        <thead><tr><th>Search Type</th><th>Example Value</th><th>Returns</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Search Type">Mobile</td><td data-label="Example Value"><code>9876543210</code></td><td data-label="Returns">Rahul Sharma (exact)</td></tr>
+          <tr><td data-label="Search Type">Mobile</td><td data-label="Example Value"><code>987</code></td><td data-label="Returns">Rahul Sharma (partial)</td></tr>
+          <tr><td data-label="Search Type">Mobile</td><td data-label="Example Value"><code>765</code></td><td data-label="Returns">Amit Kumar + Suresh Yadav (multiple results)</td></tr>
+          <tr><td data-label="Search Type">Reg. Number</td><td data-label="Example Value"><code>MH12AB1234</code></td><td data-label="Returns">Rahul Sharma / VEH-IB-001</td></tr>
+          <tr><td data-label="Search Type">Reg. Number</td><td data-label="Example Value"><code>DL</code></td><td data-label="Returns">Amit Kumar (2 vehicles â€” both DL plates)</td></tr>
+          <tr><td data-label="Search Type">Customer Name</td><td data-label="Example Value"><code>sharma</code></td><td data-label="Returns">Rahul Sharma</td></tr>
+          <tr><td data-label="Search Type">Customer Name</td><td data-label="Example Value"><code>kumar</code></td><td data-label="Returns">Amit Kumar</td></tr>
+          <tr><td data-label="Search Type">Email</td><td data-label="Example Value"><code>gmail.com</code></td><td data-label="Returns">Priya Patel (single)</td></tr>
+          <tr><td data-label="Search Type">Email</td><td data-label="Example Value"><code>excellonsoft.com</code></td><td data-label="Returns">Ekta Sire + Roshan (multiple)</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<hr />
+
+<h2 id="4-mock-customers-customer-master-fallback">4. Mock Customers â€” Customer Master (Fallback)</h2>
+<blockquote class="info-box"><p><strong>Source:</strong> <code>apps/api/src/modules/integration/MockCustomerMasterAdapter.ts</code></p><p><strong>Environment:</strong> All non-production environments (in-memory; no database entry).</p></blockquote>
+<p>Used as a fallback when the Install Base returns no results. Contains customer-only records (no vehicles or dealer links). Supports search by: <strong>Mobile</strong>, <strong>Customer Name</strong>, <strong>Email</strong>. Does NOT support Registration Number.</p>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-p8i8n7s"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-p8i8n7s">10 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-p8i8n7s" class="data-table">
+        <thead><tr><th>#</th><th>Customer Ref</th><th>Name</th><th>Mobile</th><th>Email</th></tr></thead>
+        <tbody>
+          <tr><td data-label="#">1</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-CM-001`</code><button class="copy-btn" data-copy="`CUST-CM-001`" title="Copy" aria-label="Copy `CUST-CM-001`">âŽ˜</button></span></td><td data-label="Name">Rajesh Gupta</td><td data-label="Mobile"><code>9001234567</code></td><td data-label="Email">rajesh.gupta@email.com</td></tr>
+          <tr><td data-label="#">2</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-CM-002`</code><button class="copy-btn" data-copy="`CUST-CM-002`" title="Copy" aria-label="Copy `CUST-CM-002`">âŽ˜</button></span></td><td data-label="Name">Pooja Verma</td><td data-label="Mobile"><code>8901234567</code></td><td data-label="Email">pooja.verma@gmail.com</td></tr>
+          <tr><td data-label="#">3</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-CM-003`</code><button class="copy-btn" data-copy="`CUST-CM-003`" title="Copy" aria-label="Copy `CUST-CM-003`">âŽ˜</button></span></td><td data-label="Name">Manish Tiwari</td><td data-label="Mobile"><code>7801234567</code></td><td data-label="Email"><em>(none)</em></td></tr>
+          <tr><td data-label="#">4</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-CM-004`</code><button class="copy-btn" data-copy="`CUST-CM-004`" title="Copy" aria-label="Copy `CUST-CM-004`">âŽ˜</button></span></td><td data-label="Name">Nisha Agarwal</td><td data-label="Mobile"><code>6701234567</code></td><td data-label="Email">nisha.agarwal@yahoo.com</td></tr>
+          <tr><td data-label="#">5</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-CM-005`</code><button class="copy-btn" data-copy="`CUST-CM-005`" title="Copy" aria-label="Copy `CUST-CM-005`">âŽ˜</button></span></td><td data-label="Name">Sanjay Bhatt</td><td data-label="Mobile"><code>9601234567</code></td><td data-label="Email">sanjay.bhatt@outlook.com</td></tr>
+          <tr><td data-label="#">6</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-CM-006`</code><button class="copy-btn" data-copy="`CUST-CM-006`" title="Copy" aria-label="Copy `CUST-CM-006`">âŽ˜</button></span></td><td data-label="Name">Rekha Pillai</td><td data-label="Mobile"><code>8501234567</code></td><td data-label="Email">rekha.pillai@rediffmail.com</td></tr>
+          <tr><td data-label="#">7</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-CM-007`</code><button class="copy-btn" data-copy="`CUST-CM-007`" title="Copy" aria-label="Copy `CUST-CM-007`">âŽ˜</button></span></td><td data-label="Name">Arjun Desai</td><td data-label="Mobile"><code>7401234567</code></td><td data-label="Email">arjun.desai@protonmail.com</td></tr>
+          <tr><td data-label="#">8</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-CM-008`</code><button class="copy-btn" data-copy="`CUST-CM-008`" title="Copy" aria-label="Copy `CUST-CM-008`">âŽ˜</button></span></td><td data-label="Name">Latha Krishnan</td><td data-label="Mobile"><code>9301234567</code></td><td data-label="Email">latha.krishnan@techmail.in</td></tr>
+          <tr><td data-label="#">9</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-CM-009`</code><button class="copy-btn" data-copy="`CUST-CM-009`" title="Copy" aria-label="Copy `CUST-CM-009`">âŽ˜</button></span></td><td data-label="Name">Harish Chandra</td><td data-label="Mobile"><code>8201234567</code></td><td data-label="Email"><em>(none)</em></td></tr>
+          <tr><td data-label="#">10</td><td data-label="Customer Ref"><span class="copy-cell"><code>`CUST-CM-010`</code><button class="copy-btn" data-copy="`CUST-CM-010`" title="Copy" aria-label="Copy `CUST-CM-010`">âŽ˜</button></span></td><td data-label="Name">Smita Kulkarni</td><td data-label="Mobile"><code>7101234567</code></td><td data-label="Email">smita.kulkarni@business.in</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<blockquote class="info-box"><p><strong>When to test with Customer Master data:</strong> Search for a mobile number that exists ONLY in the CM list (e.g., <code>9001234567</code>). The result will show a customer card with no vehicle or dealer context.</p></blockquote>
+<hr />
+
+<h2 id="5-mock-dealers">5. Mock Dealers</h2>
+<blockquote class="info-box"><p><strong>Source:</strong> <code>apps/api/src/modules/integration/MockContextAdapter.ts</code></p><p><strong>Environment:</strong> All non-production environments (in-memory).</p></blockquote>
+<p>Dealers are linked from vehicle records via <code>Dealer Ref</code>. The context API resolves dealer details when displaying the Dealer Context Card.</p>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-x7fb7y6"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-x7fb7y6">8 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-x7fb7y6" class="data-table">
+        <thead><tr><th>Dealer Ref</th><th>Name</th><th>Dealer Code</th><th>Branch</th><th>City</th><th>PIN</th><th>ASC Name</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-001`</code><button class="copy-btn" data-copy="`DLR-001`" title="Copy" aria-label="Copy `DLR-001`">âŽ˜</button></span></td><td data-label="Name">Sharma Bajaj Motors</td><td data-label="Dealer Code"><code>MH-SBM-001</code></td><td data-label="Branch">Pune Main Branch</td><td data-label="City">Pune</td><td data-label="PIN">411005</td><td data-label="ASC Name">Sharma Auto Service Centre</td></tr>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-002`</code><button class="copy-btn" data-copy="`DLR-002`" title="Copy" aria-label="Copy `DLR-002`">âŽ˜</button></span></td><td data-label="Name">Gujarat Bajaj Pvt Ltd</td><td data-label="Dealer Code"><code>GJ-GBP-002</code></td><td data-label="Branch">Ahmedabad Central</td><td data-label="City">Ahmedabad</td><td data-label="PIN">380009</td><td data-label="ASC Name">Gujarat Auto Service</td></tr>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-003`</code><button class="copy-btn" data-copy="`DLR-003`" title="Copy" aria-label="Copy `DLR-003`">âŽ˜</button></span></td><td data-label="Name">Capital Bajaj Delhi</td><td data-label="Dealer Code"><code>DL-CBD-003</code></td><td data-label="Branch">South Delhi</td><td data-label="City">New Delhi</td><td data-label="PIN">110024</td><td data-label="ASC Name">Capital Auto Works</td></tr>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-004`</code><button class="copy-btn" data-copy="`DLR-004`" title="Copy" aria-label="Copy `DLR-004`">âŽ˜</button></span></td><td data-label="Name">Reddy Bajaj Automobiles</td><td data-label="Dealer Code"><code>AP-RBA-004</code></td><td data-label="Branch">Hyderabad East</td><td data-label="City">Hyderabad</td><td data-label="PIN">500003</td><td data-label="ASC Name">Reddy Auto Service</td></tr>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-005`</code><button class="copy-btn" data-copy="`DLR-005`" title="Copy" aria-label="Copy `DLR-005`">âŽ˜</button></span></td><td data-label="Name">Rajputana Bajaj</td><td data-label="Dealer Code"><code>RJ-RJB-005</code></td><td data-label="Branch">Jaipur Main</td><td data-label="City">Jaipur</td><td data-label="PIN">302001</td><td data-label="ASC Name">Rajputana Auto Workshop</td></tr>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-006`</code><button class="copy-btn" data-copy="`DLR-006`" title="Copy" aria-label="Copy `DLR-006`">âŽ˜</button></span></td><td data-label="Name">Kerala Bajaj Centre</td><td data-label="Dealer Code"><code>KL-KBC-006</code></td><td data-label="Branch">Kochi</td><td data-label="City">Kochi</td><td data-label="PIN">682035</td><td data-label="ASC Name">Kerala Auto Service</td></tr>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-007`</code><button class="copy-btn" data-copy="`DLR-007`" title="Copy" aria-label="Copy `DLR-007`">âŽ˜</button></span></td><td data-label="Name">TN Bajaj Dealers</td><td data-label="Dealer Code"><code>TN-TBD-007</code></td><td data-label="Branch">Chennai West</td><td data-label="City">Chennai</td><td data-label="PIN">600040</td><td data-label="ASC Name">TN Auto Service Centre</td></tr>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-008`</code><button class="copy-btn" data-copy="`DLR-008`" title="Copy" aria-label="Copy `DLR-008`">âŽ˜</button></span></td><td data-label="Name">UP Bajaj Showroom</td><td data-label="Dealer Code"><code>UP-UBS-008</code></td><td data-label="Branch">Lucknow Main</td><td data-label="City">Lucknow</td><td data-label="PIN">226001</td><td data-label="ASC Name">UP Auto Workshop</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<p><strong>Dealer â†’ Customer mapping:</strong></p>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-j443eki"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-j443eki">8 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-j443eki" class="data-table">
+        <thead><tr><th>Dealer Ref</th><th>Customers served</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-001`</code><button class="copy-btn" data-copy="`DLR-001`" title="Copy" aria-label="Copy `DLR-001`">âŽ˜</button></span></td><td data-label="Customers served">Rahul Sharma (<code>CUST-IB-001</code>), Mahabaleshwar (<code>CUST-IB-010</code>)</td></tr>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-002`</code><button class="copy-btn" data-copy="`DLR-002`" title="Copy" aria-label="Copy `DLR-002`">âŽ˜</button></span></td><td data-label="Customers served">Priya Patel (<code>CUST-IB-002</code>), Ekta Sire (<code>CUST-IB-006</code>)</td></tr>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-003`</code><button class="copy-btn" data-copy="`DLR-003`" title="Copy" aria-label="Copy `DLR-003`">âŽ˜</button></span></td><td data-label="Customers served">Amit Kumar (<code>CUST-IB-003</code>) â€” both vehicles</td></tr>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-004`</code><button class="copy-btn" data-copy="`DLR-004`" title="Copy" aria-label="Copy `DLR-004`">âŽ˜</button></span></td><td data-label="Customers served">Sunita Reddy (<code>CUST-IB-004</code>)</td></tr>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-005`</code><button class="copy-btn" data-copy="`DLR-005`" title="Copy" aria-label="Copy `DLR-005`">âŽ˜</button></span></td><td data-label="Customers served">Vikram Singh (<code>CUST-IB-005</code>)</td></tr>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-006`</code><button class="copy-btn" data-copy="`DLR-006`" title="Copy" aria-label="Copy `DLR-006`">âŽ˜</button></span></td><td data-label="Customers served">Roshan (<code>CUST-IB-007</code>)</td></tr>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-007`</code><button class="copy-btn" data-copy="`DLR-007`" title="Copy" aria-label="Copy `DLR-007`">âŽ˜</button></span></td><td data-label="Customers served">Kavitha Balachandran (<code>CUST-IB-008</code>)</td></tr>
+          <tr><td data-label="Dealer Ref"><span class="copy-cell"><code>`DLR-008`</code><button class="copy-btn" data-copy="`DLR-008`" title="Copy" aria-label="Copy `DLR-008`">âŽ˜</button></span></td><td data-label="Customers served">Suresh Yadav (<code>CUST-IB-009</code>)</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<hr />
+
+<h2 id="6-test-database-helpers">6. Test Database Helpers</h2>
+<blockquote class="info-box"><p><strong>Source:</strong> <code>apps/api/src/__tests__/helpers/testDb.ts</code></p><p><strong>Environment:</strong> Integration tests only (never runs in the application).</p></blockquote>
+<p>These TypeScript helper functions are used by Vitest integration tests to create and tear down test data programmatically.</p>
+<h3 id="61-seed-functions">6.1 Seed Functions</h3>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-bshtc8n"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-bshtc8n">4 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-bshtc8n" class="data-table">
+        <thead><tr><th>Function</th><th>Purpose</th><th>Default Values</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Function"><code>seedTestUser(username, passwordHash, displayName?, isActive?)</code></td><td data-label="Purpose">Creates or upserts a user</td><td data-label="Default Values">displayName: &quot;Test User&quot;, isActive: true</td></tr>
+          <tr><td data-label="Function"><code>assignAgentRole(userId)</code></td><td data-label="Purpose">Gives agent role to a user</td><td data-label="Default Values">â€”</td></tr>
+          <tr><td data-label="Function"><code>seedInteraction(userId, status, correlationId?)</code></td><td data-label="Purpose">Creates interaction in given status</td><td data-label="Default Values">correlationId: <code>test-corr-seed</code>, channel: <code>manual</code></td></tr>
+          <tr><td data-label="Function"><code>seedWrapup(interactionId, userId, dispositionCode?, remarks?)</code></td><td data-label="Purpose">Adds wrapup to interaction</td><td data-label="Default Values">disposition: <code>information_provided</code>, reason: <code>query</code>, outcome: <code>customer_vehicle_identified</code></td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<h3 id="62-cleanup-functions">6.2 Cleanup Functions</h3>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-j8apmg7"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-j8apmg7">4 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-j8apmg7" class="data-table">
+        <thead><tr><th>Function</th><th>Removes</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Function"><code>removeTestUser(username)</code></td><td data-label="Removes">User + role assignments (cascades)</td></tr>
+          <tr><td data-label="Function"><code>cleanupInteractions(userId)</code></td><td data-label="Removes">All interactions + events + wrapups + search_attempts for user</td></tr>
+          <tr><td data-label="Function"><code>cleanupAgentStatus(userId)</code></td><td data-label="Removes">Agent status record</td></tr>
+          <tr><td data-label="Function"><code>cleanupUserAuditEvents(userId)</code></td><td data-label="Removes">Audit events not linked to an interaction</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<h3 id="63-assertion-helpers">6.3 Assertion Helpers</h3>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-l03xor5"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-l03xor5">1 row</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-l03xor5" class="data-table">
+        <thead><tr><th>Function</th><th>Returns</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Function"><code>countAuditEvents(interactionId, eventName?)</code></td><td data-label="Returns">Count of events (optionally filtered by name)</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<h3 id="64-auth-helper-testappts">6.4 Auth Helper (<code>testApp.ts</code>)</h3>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-dbb3o5v"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-dbb3o5v">2 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-dbb3o5v" class="data-table">
+        <thead><tr><th>Function</th><th>Returns</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Function"><code>loginAs(username, password)</code></td><td data-label="Returns"><code>{ cookieHeader, csrfToken, sessionCookie, loginResponse }</code></td></tr>
+          <tr><td data-label="Function"><code>authedRequest(method, url, session)</code></td><td data-label="Returns">Supertest request with cookie + X-CSRF-Token pre-set</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<hr />
+
+<h2 id="7-seeding-flow">7. Seeding Flow</h2>
+<h3 id="local-development-docker-compose">Local Development (Docker Compose)</h3>
+<pre class="code-block" data-lang="text"><code>docker compose up
+  â””â”€ ccm-postgres container initializes
+       â””â”€ /docker-entrypoint-initdb.d/*.sql executed in alphabetical order
+            â”œâ”€ 001_create_users.sql           â€” schema
+            â”œâ”€ 002_create_roles.sql           â€” schema
+            â”œâ”€ ...
+            â”œâ”€ 011_seed_reference_values.sql  â€” reference data (dispositions, statuses, etc.)
+            â”œâ”€ 012_... to 014_...             â€” schema patches
+            â””â”€ (seeds/dev/*.sql)             â€” uncomment volume in docker-compose.yml to activate
+                 â””â”€ seed_test_users_dev_only.sql â€” agent1, noaccess</code></pre>
+<p><strong>To activate test users on a fresh container:</strong></p>
+<ol class="doc-list"><li>Open <code>docker-compose.yml</code></li><li>Uncomment the line: <code># - ./ops/seeds/dev:/docker-entrypoint-initdb.d/seeds</code></li><li>Run <code>docker compose down -v &amp;&amp; docker compose up -d</code> (volume wipe required for init scripts to re-run)</li></ol>
+<h3 id="integration-tests">Integration Tests</h3>
+<pre class="code-block" data-lang="text"><code>vitest runs
+  â””â”€ setupFiles: loadEnv.ts reads apps/api/.env.test
+  â””â”€ each test calls testDb helpers:
+       seedTestUser() â†’ assignAgentRole() â†’ seedInteraction() â†’ ...assertions... â†’ cleanup*()</code></pre>
+<h3 id="production">Production</h3>
+<p>Only schema migrations (<code>001â€“014</code>) execute. No test users, no mock adapters, no dev seeds.</p>
+<hr />
+
+<h2 id="8-file-index">8. File Index</h2>
+
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="search" class="table-filter" data-table="tbl-uqytp65"
+             placeholder="Filter this tableâ€¦" aria-label="Filter table rows" />
+      <span class="row-count" data-table="tbl-uqytp65">7 rows</span>
+    </div>
+    <div class="table-scroll">
+      <table id="tbl-uqytp65" class="data-table">
+        <thead><tr><th>File</th><th>Type</th><th>What it seeds</th><th>Environments</th></tr></thead>
+        <tbody>
+          <tr><td data-label="File"><code>ops/migrations/011_seed_reference_values.sql</code></td><td data-label="Type">SQL migration</td><td data-label="What it seeds">All reference/lookup values (dropdowns)</td><td data-label="Environments">All</td></tr>
+          <tr><td data-label="File"><code>ops/seeds/dev/seed_test_users_dev_only.sql</code></td><td data-label="Type">SQL dev seed</td><td data-label="What it seeds"><code>agent1</code>, <code>noaccess</code> users</td><td data-label="Environments">Dev, CI only</td></tr>
+          <tr><td data-label="File"><code>apps/api/src/modules/integration/MockInstallBaseAdapter.ts</code></td><td data-label="Type">In-memory mock</td><td data-label="What it seeds">10 customers, 11 vehicles</td><td data-label="Environments">Non-production</td></tr>
+          <tr><td data-label="File"><code>apps/api/src/modules/integration/MockCustomerMasterAdapter.ts</code></td><td data-label="Type">In-memory mock</td><td data-label="What it seeds">10 customers (no vehicles)</td><td data-label="Environments">Non-production</td></tr>
+          <tr><td data-label="File"><code>apps/api/src/modules/integration/MockContextAdapter.ts</code></td><td data-label="Type">In-memory mock</td><td data-label="What it seeds">8 dealers + context aggregation</td><td data-label="Environments">Non-production</td></tr>
+          <tr><td data-label="File"><code>apps/api/src/__tests__/helpers/testDb.ts</code></td><td data-label="Type">TS test helper</td><td data-label="What it seeds">Dynamic seed/cleanup functions</td><td data-label="Environments">Tests only</td></tr>
+          <tr><td data-label="File"><code>apps/api/src/__tests__/helpers/testApp.ts</code></td><td data-label="Type">TS test helper</td><td data-label="What it seeds">Express app + loginAs helper</td><td data-label="Environments">Tests only</td></tr>
+        </tbody>
+      </table>
+      <p class="no-results" aria-live="polite" style="display:none">No matching entries.</p>
+    </div>
+  </div>
+<hr />
+<p><em>Last updated: 2026-03-23. Update this file whenever any seed, migration, or mock data file changes.</em></p>
+
+
+      <footer class="doc-footer" role="contentinfo">
+        <div>
+          <strong>Primary source:</strong> <code>docs/seeded-data-reference.md</code>
+          &nbsp;Â·&nbsp;
+        <strong>Generated:</strong> 29 Mar 2026, 15:14
+        </div>
+        <div>
+          <strong>Regenerate:</strong> <code>npm run docs:seeds</code>
+          &nbsp;Â·&nbsp;
+          <strong>Watch mode:</strong> <code>npm run docs:seeds:watch</code>
+        </div>
+        <div>
+          <strong>Watched files:</strong>
+          <code>docs/seeded-data-reference.md, ops/migrations/011_seed_reference_values.sql, ops/seeds/dev/seed_test_users_dev_only.sql, ops/seeds/dev/seed_activity_flow_users_dev_only.sql, apps/api/src/modules/integration/MockInstallBaseAdapter.ts, apps/api/src/modules/integration/MockCustomerMasterAdapter.ts, apps/api/src/modules/integration/MockContextAdapter.ts</code>
+        </div>
+      </footer>
+    </main>
+
+  </div><!-- /.layout -->
+
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       INTERACTIVE BEHAVIOUR
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <script>
+    'use strict';
+
+    // â”€â”€ Copy-to-clipboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.copy-btn');
+      if (!btn) return;
+      const text = btn.dataset.copy;
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.classList.add('copied');
+        btn.textContent = 'âœ“';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.textContent = 'âŽ˜';
+        }, 1600);
+      }).catch(() => {
+        // Fallback for non-HTTPS
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btn.textContent = 'âœ“';
+        setTimeout(() => { btn.textContent = 'âŽ˜'; }, 1600);
+      });
+    });
+
+    // â”€â”€ Per-table filter â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    function applyFilter(input) {
+      const tableId = input.dataset.table;
+      const table   = document.getElementById(tableId);
+      if (!table) return;
+
+      const q = input.value.trim().toLowerCase();
+      const rows = table.querySelectorAll('tbody tr');
+      let visible = 0;
+
+      rows.forEach((row) => {
+        const matches = !q || row.textContent.toLowerCase().includes(q);
+        row.classList.toggle('row-hidden', !matches);
+        if (matches) visible++;
+      });
+
+      // Update row count badge
+      const badge = document.querySelector(`.row-count[data-table="${tableId}"]`);
+      if (badge) {
+        badge.textContent = q
+          ? `${visible} of ${rows.length} row${rows.length !== 1 ? 's' : ''}`
+          : `${rows.length} row${rows.length !== 1 ? 's' : ''}`;
+      }
+
+      // Show/hide no-results message
+      const noResults = table.closest('.table-scroll')
+                             ?.querySelector('.no-results');
+      if (noResults) {
+        noResults.style.display = (visible === 0 && q) ? 'block' : 'none';
+      }
+    }
+
+    // Attach per-table filter listeners
+    document.querySelectorAll('.table-filter').forEach((input) => {
+      input.addEventListener('input', () => applyFilter(input));
+    });
+
+    // â”€â”€ Global search â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    const globalSearch = document.getElementById('globalSearch');
+    if (globalSearch) {
+      globalSearch.addEventListener('input', () => {
+        const q = globalSearch.value;
+        // Push the query into every per-table filter and trigger them
+        document.querySelectorAll('.table-filter').forEach((input) => {
+          input.value = q;
+          applyFilter(input);
+        });
+      });
+    }
+
+    // â”€â”€ Keyboard shortcut: / focuses search â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    document.addEventListener('keydown', (e) => {
+      if (
+        e.key === '/' &&
+        document.activeElement !== globalSearch &&
+        !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)
+      ) {
+        e.preventDefault();
+        globalSearch?.focus();
+      }
+      if (e.key === 'Escape' && document.activeElement === globalSearch) {
+        globalSearch.value = '';
+        globalSearch.dispatchEvent(new Event('input'));
+        globalSearch.blur();
+      }
+    });
+
+    // â”€â”€ TOC scroll-spy â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    const tocLinks  = document.querySelectorAll('.toc-link');
+    const headings  = [...document.querySelectorAll('h2[id], h3[id]')];
+
+    if ('IntersectionObserver' in window) {
+      const spy = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const id   = entry.target.id;
+          const href = '#' + id;
+          tocLinks.forEach((link) => {
+            link.classList.toggle('active', link.getAttribute('href') === href);
+          });
+        });
+      }, { rootMargin: '-56px 0px -72% 0px', threshold: 0 });
+
+      headings.forEach((h) => spy.observe(h));
+    }
+  </script>
+</body>
+</html>
